@@ -4,11 +4,39 @@ import os
 import requests
 import pandas as pd
 import tabula
+import warnings
 
+# Ignore warnings
+warnings.filterwarnings("ignore")
 
-############ ACQUIRE POLA FUNCTION ###########
+############# PREP POLA FUNCTION #############
 
-def acquire_pola():    
+def prep_pola(df):
+    
+    # Rename columns for readability
+    df = df.rename(columns={'Date':'date',
+                   'POLA Vessels at\rAnchor':'num_at_anchor', 
+                   'POLA Vessels at\rBerth':'num_at_berth',
+                   'POLA Vessels\rDeparted':'departed',
+                   'Average Days at\rBerth':'avg_days_at_berth',
+                   'Average Days at\rANC + Berth':'avg_days_anchor_berth'})
+    
+    # Change the 2014-08-04 value to 2015-08-04
+    df.iloc[97].date = '8/4/2015'
+
+    # Set the date column as the datetime index
+    df.date = pd.to_datetime(df.date)
+    df = df.set_index('date')
+
+    # Convert column values to floats
+    for col in df.columns:
+        df[col] = df[col].astype(float)
+
+    return df
+
+############ WRANGLE POLA FUNCTION ###########
+
+def wrangle_pola():    
     """
     Reads in the POLA data. From the csv if it's already there and if not, it downloads the data from the Port of Los Angeles
     website as pdfs, converts them to dataframes, concatenates them, deletes the original pdfs, and saves the combined data
@@ -90,7 +118,10 @@ def acquire_pola():
                 })
 
             results_df = pd.concat([results_df.iloc[:i], temp_df, results_df[i+1:]], axis=0).reset_index(drop=True)
-        
+       
+        # Apply the prep function
+        results_df = prep_pola(results_df)
+
         # Save the dataframe to a csv in the working directory named 'pola.csv'
         results_df.to_csv('pola.csv')
         
@@ -98,34 +129,6 @@ def acquire_pola():
 
     
     
-############# PREP POLA FUNCTION #############
-
-def prep_pola(df):
-    
-    # Rename columns for readability
-    df = df.rename(columns={'Date':'date',
-                   'POLA Vessels at\rAnchor':'num_at_anchor', 
-                   'POLA Vessels at\rBerth':'num_at_berth',
-                   'POLA Vessels\rDeparted':'departed',
-                   'Average Days at\rBerth':'avg_days_at_berth',
-                   'Average Days at\rANC + Berth':'avg_days_anchor_berth'})
-    
-    # Set the date column as the datetime index
-    df.date = pd.to_datetime(df.date).dt.strftime('%m/%d/%Y')
-    df = df.set_index('date')
-
-    return df
-
-
-
-############## WRANGLE DATA FUNCTION ###############
-
-def wrangle_pola():
-    
-    df = prep_pola(acquire_pola())
-    return df
-
-
 
 
 
