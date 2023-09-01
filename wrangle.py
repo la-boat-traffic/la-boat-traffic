@@ -15,7 +15,7 @@ def prep_pola(df):
     
     # Change the 2014-08-04 value to 2015-08-04
     df.iloc[97].date = '8/4/2015'
-    
+    df = df.iloc[0:966]
     # Set the date column as the datetime index
     df.date = pd.to_datetime(df.date)
     df = df.set_index('date')
@@ -43,6 +43,7 @@ def wrangle_pola():
     else:
         # List of URLs for the PDFs to download and process
         lst = [
+            "a39485f1-46e4-44cd-98ff-d772cb663174/port-of-los-angeles-container-vessel-activity-summary-2019",
             "1a8f2a5f-8d5f-4262-a1f8-2de701fc1bda/Port-of-Los-Angeles-Container-Vessel-Activity-Summary-2018",
             "517cbd39-d632-489d-bddf-87750ca1ccb5/Port-of-Los-Angeles-Container-Vessel-Activity-Summary-2017",
             "2d907886-b866-4610-9c62-b4171662ddad/Port-of-Los-Angeles-Container-Vessel-Activity-Summary-2016",
@@ -66,8 +67,8 @@ def wrangle_pola():
         # Initialize an empty DataFrame to store the results
         results_df = pd.DataFrame()
 
-        # Loop through years (2015-2018) to process PDFs
-        for i in range(5, 9):
+        # Loop through years (2015-2019) to process PDFs
+        for i in range(5, 10):
             # Path to the PDF file
             pdf_file_path = f'pola201{i}.pdf'
 
