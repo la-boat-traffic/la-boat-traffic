@@ -15,7 +15,7 @@ def prep_pola(df):
     
     # Change the 2014-08-04 value to 2015-08-04
     df.iloc[97].date = '8/4/2015'
-    df = df.iloc[0:966]
+    df = df.iloc[20:936]
     # Set the date column as the datetime index
     df.date = pd.to_datetime(df.date)
     df = df.set_index('date')
