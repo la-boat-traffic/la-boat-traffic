@@ -1,4 +1,4 @@
-############ INITIAL IMPORTS ###########
+############### INITIAL IMPORTS #############
 
 import os
 import requests
@@ -13,39 +13,48 @@ warnings.filterwarnings("ignore")
 ############# PREP POLA FUNCTION #############
 
 def prep_pola(df):
-    
+    """
+    Prepare the POLA DataFrame for analysis.
+
+    Args:
+        df (DataFrame): Input DataFrame containing POLA data.
+
+    Returns:
+        DataFrame: Processed DataFrame with additional columns.
+    """
+    # Select relevant rows
     df = df.iloc[32:936]
-    
+
     # Set the date column as the datetime index
     df.date = pd.to_datetime(df.date)
     df = df.set_index('date')
- 
+
     # Convert column values to floats
     for col in df.columns:
         df[col] = df[col].astype(float)
-        
+
     # Create 'year', 'month', and 'day' columns
     df['year'] = pd.DatetimeIndex(df.index).year
     df['month'] = pd.DatetimeIndex(df.index).month
     df['day'] = pd.DatetimeIndex(df.index).day
-    
+
     # Create 'weekday' and 'day_num' columns
     df['weekday'] = df.index.day_name()
     df['day_num'] = df.index.day_of_week
-    
+
     # Create 'backlog' column
     df['backlog'] = df.avg_days_anchor_berth - df.avg_days_at_berth
-    
+
     return df
 
 
 ############ WRANGLE POLA FUNCTION ###########
 
-def wrangle_pola():    
+def wrangle_pola():
     """
     Reads in the POLA data. From the csv if it's already there and if not, it downloads the data from the Port of Los Angeles
     website as pdfs, converts them to dataframes, concatenates them, deletes the original pdfs, and saves the combined data
-    in a csv file called 'pola.csv'
+    in a csv file called 'pola.csv'.
     """
 
     # List of URLs for the PDFs to download and process
@@ -111,7 +120,7 @@ def wrangle_pola():
 
         temp_df = pd.DataFrame({
             'Date': [values[0][0], values[0][1]],
-            'POLA Vessels at\rAnchor' : [values[1][0], values[1][1]],
+            'POLA Vessels at\rAnchor': [values[1][0], values[1][1]],
             'POLA Vessels at\rBerth': [values[2][0], values[2][1]],
             'POLA Vessels\rDeparted': [values[3][0], values[3][1]],
             'Average Days at\rBerth': [values[4][0], values[4][1]],
@@ -119,44 +128,41 @@ def wrangle_pola():
             })
 
         results_df = pd.concat([results_df.iloc[:i], temp_df, results_df[i+1:]], axis=0).reset_index(drop=True)
-       
+
     # Rename columns for readability
-    results_df = results_df.rename(columns={'Date':'date',
-               'POLA Vessels at\rAnchor':'num_at_anchor', 
-               'POLA Vessels at\rBerth':'num_at_berth',
-               'POLA Vessels\rDeparted':'departed',
-               'Average Days at\rBerth':'avg_days_at_berth',
-               'Average Days at\rANC + Berth':'avg_days_anchor_berth'})
-        
+    results_df = results_df.rename(columns={'Date': 'date',
+               'POLA Vessels at\rAnchor': 'num_at_anchor',
+               'POLA Vessels at\rBerth': 'num_at_berth',
+               'POLA Vessels\rDeparted': 'departed',
+               'Average Days at\rBerth': 'avg_days_at_berth',
+               'Average Days at\rANC + Berth': 'avg_days_anchor_berth'})
+
     # Save the dataframe to a csv in the working directory named 'pola.csv'
     results_df.to_csv('pola.csv', index=False)
-        
+
     # Change the 2014-08-04 value to 2015-08-04
     results_df.iloc[97].date = '8/4/2015'
     results_df = prep_pola(results_df)
-        
+
     return results_df
 
-    
+
 ############### SPLIT POLA FUNCTION ###############
 
-def split_pola(df):    
+def split_pola(df):
+    """
+    Split the POLA DataFrame into training, validation, and test sets.
+
+    Args:
+        df (DataFrame): Input DataFrame containing POLA data.
+
+    Returns:
+        DataFrame, DataFrame, DataFrame: Training, validation, and test DataFrames.
     """
     
-    """
+    # Perform a 70/15/15 split on the dataset
     train = df.iloc[:round(len(df)*.7)]
     val = df.iloc[round(len(df)*.7):round(len(df)*.85)]
     test = df.iloc[round(len(df)*.85):]
     return train, val, test
-    
-
-
-
-
-
-
-
-
-
-
 
