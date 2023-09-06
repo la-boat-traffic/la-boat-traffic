@@ -9,9 +9,6 @@
 [[Data Dictionary](#dictionary)]
 [[Project Planning](#planning)]
 [[Key Findings](#findings)]
-[[Statistical Analysis](#stats)]
-[[Modeling](#model)]
-[[Conclusion](#conclusion)]
 ___
 
 
@@ -78,12 +75,12 @@ We utilized Time Series Analysis to predict boat traffic, defined as number of b
 
 ### Model 1
 
-- Rolling Average baseline model had an RMSE of of 4.95 ships
+- Rolling Average baseline model had an RMSE of of 2.83 ships, exceeding weekly difference between minimum and maximum average bert occupancy
 
 ### Model 2
 
 - Holt's Linear Model was set at non-exponential smoothing and no dampening
-- RMSE was 5.64, not exceeding baseline
+- RMSE was 2.43, exceeding baseline
 
 ### Model 3
 
@@ -98,6 +95,8 @@ We utilized Time Series Analysis to predict boat traffic, defined as number of b
 - The modal average of ships in port was 10, by a wide margin. 
 
 # Recommendations
+
+- Utilize our Holt model when weekly models are not feasible (holiday weeks)
 - Staffing, shifts, and material focus should remain on latter parts of the week as port traffic, as well as backlog, tends to reach a maximum
 - The port should be prepared to handle at least 10 ships, likely including one non-container ship at berth on high-occupancy days
 
