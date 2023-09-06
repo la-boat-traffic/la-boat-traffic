@@ -24,7 +24,7 @@ We utilized Time Series Analysis to predict boat traffic, defined as number of b
 
  ## <a name="project_goal"></a>Project Goal:
 
- The Port of Los Angeles is the busiest shipping port in the United States. Staffing and resource allocation for such a major trade hub is crucial to maintaining logistical integrity for US importation and exportation. In pursuit of informing planners of such logistics, our goal was to analyze port traffice data over time to create a model for predicting daily traffic. 
+ The Port of Los Angeles is the busiest shipping port in the United States. Staffing and resource allocation for such a major trade hub is crucial to maintaining logistical integrity for US importation and exportation. In pursuit of informing planners of such logistics, our goal was to analyze port traffic data over time to create a model for predicting daily traffic. 
 
  [[Back to top](#top)]
  
@@ -78,11 +78,12 @@ We utilized Time Series Analysis to predict boat traffic, defined as number of b
 
 ### Model 1
 
-- 
+- Rolling Average baseline model had an RMSE of of 4.95 ships
 
 ### Model 2
 
-- 
+- Holt's Linear Model was set at non-exponential smoothing and no dampening
+- RMSE was 5.64, not exceeding baseline
 
 ### Model 3
 
@@ -94,18 +95,18 @@ We utilized Time Series Analysis to predict boat traffic, defined as number of b
 
 - Exploration of the data showed that the most predictable trends are weekly traffic patterns. Since the port is closed on weekends, total berth occupancy tends to build up toward the middle of the week as ships arrive. The port is consequently busiest in the last half of the week.
 - The original data included March of 2015, but an unusually large number of anchored ships and backlog time indicated an anomaly. From internet research, there was a US West Coast dock workers strike at this time that increased wait time for ships. We ultimately excluded March and half of April and re-split our data. 
-- 
+- The modal average of ships in port was 10, by a wide margin. 
 
 # Recommendations
-- Staffing, shifts, and material focus should remain on latter parts of the week as port traffic, as well as backlog, tends to maximize 
-- 
-- 
+- Staffing, shifts, and material focus should remain on latter parts of the week as port traffic, as well as backlog, tends to reach a maximum
+- The port should be prepared to handle at least 10 ships, likely including one non-container ship at berth on high-occupancy days
 
 # Next Steps
 
 - Attempt additional time series models including: Holt Winter and Facebook Prophet models
-- Check with Port of LA to obtain additional data on ship type and  individual dock data
-- Obtain destination weather data from most common trade partner ports to see if this affects LA port traffic
+- Check with Port of LA to obtain additional data on ship type and individual dock data
+- Collect data on when shipping companies "slow steam" to save money on repairs and fuel
+- Obtain point of origin weather data from most common trade partner ports to see if this affects LA port traffic
 
 # Steps on How to Reproduce Project:
 1. Download files from our Repository
