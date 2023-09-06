@@ -24,17 +24,17 @@ def preprocess(train, val, test):
     # Add weekends to train
     date_range = pd.date_range(start=train.index[0], end=train.index[-1], freq='D')
     train = train.reindex(date_range)
-    train['num_at_berth'] = train['num_at_berth'].fillna(0)
+    train['num_at_berth'] = train['num_at_berth'].fillna(train.num_at_berth.mean())
     
     # Add weekends to val
     date_range = pd.date_range(start=val.index[0], end=val.index[-1], freq='D')
     val = val.reindex(date_range)
-    val['num_at_berth'] = val['num_at_berth'].fillna(0)
+    val['num_at_berth'] = val['num_at_berth'].fillna(val.num_at_berth.mean())
     
     # Add weekends to test
     date_range = pd.date_range(start=test.index[0], end=test.index[-1], freq='D')
     test = test.reindex(date_range)
-    test['num_at_berth'] = test['num_at_berth'].fillna(0)
+    test['num_at_berth'] = test['num_at_berth'].fillna(test.num_at_berth.mean())
 
     return train, val, test
 
@@ -154,7 +154,7 @@ def build_holt_linear_model(train, val):
     
 ################### TEST HOLT LINEAR FUNCTION #####################
 
-def test_holt_linear():
+def test_holt_linear(train, val, test):
     """
     Build, evaluate, and test a Holt Linear model on the test dataset.
 
