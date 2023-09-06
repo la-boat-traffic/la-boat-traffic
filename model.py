@@ -109,6 +109,8 @@ def build_baseline_model(train, val):
     plt.plot(val['num_at_berth'], label='Validate', linewidth=1)
     plt.plot(yhat_df['num_at_berth'])
     plt.title('Rolling Moving Average of 21 Days')
+    plt.xlabel("Date")
+    plt.ylabel("Number of Ships")
     
     # Evaluate the model and display RMSE
     rmse = evaluate(val, yhat_df, 'num_at_berth')
@@ -181,6 +183,8 @@ def test_holt_linear(train, val, test):
     plt.plot(test['num_at_berth'], label='Test', linewidth=1)
     plt.plot(yhat_df['num_at_berth'])
     plt.title("Holt's Linear Model")
+    plt.xlabel("Date")
+    plt.ylabel("Number of Ships")
     rmse = evaluate(test, yhat_df, 'num_at_berth')
     print('num_at_berth', '-- RMSE: {:.2f}'.format(rmse))
     plt.show()
