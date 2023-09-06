@@ -9,6 +9,7 @@ import warnings
 # Ignore warnings
 warnings.filterwarnings("ignore")
 
+
 ############# PREP POLA FUNCTION #############
 
 def prep_pola(df):
@@ -22,8 +23,21 @@ def prep_pola(df):
     # Convert column values to floats
     for col in df.columns:
         df[col] = df[col].astype(float)
-
+        
+    # Create 'year', 'month', and 'day' columns
+    df['year'] = pd.DatetimeIndex(df.index).year
+    df['month'] = pd.DatetimeIndex(df.index).month
+    df['day'] = pd.DatetimeIndex(df.index).day
+    
+    # Create 'weekday' and 'day_num' columns
+    df['weekday'] = df.index.day_name()
+    df['day_num'] = df.index.day_of_week
+    
+    # Create 'backlog' column
+    df['backlog'] = df.avg_days_anchor_berth - df.avg_days_at_berth
+    
     return df
+
 
 ############ WRANGLE POLA FUNCTION ###########
 
@@ -121,15 +135,20 @@ def wrangle_pola():
     results_df.iloc[97].date = '8/4/2015'
     results_df = prep_pola(results_df)
         
-        
     return results_df
 
     
+############### SPLIT POLA FUNCTION ###############
+
+def split_pola(df):    
+    """
     
-
-
-
-
+    """
+    train = df.iloc[:round(len(df)*.7)]
+    val = df.iloc[round(len(df)*.7):round(len(df)*.85)]
+    test = df.iloc[round(len(df)*.85):]
+    return train, val, test
+    
 
 
 
